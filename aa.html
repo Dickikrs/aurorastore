@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aurora Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;900&display=swap');
+        
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            color: #1e293b;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            background: #f8fafc;
+        }
+
+        /* ==================== BACKGROUND MESH GRADIENT ==================== */
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(253, 164, 175, 0.3) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, rgba(129, 140, 248, 0.2) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.2) 0, transparent 50%), 
+                radial-gradient(at 0% 100%, rgba(167, 139, 250, 0.2) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, rgba(251, 113, 133, 0.2) 0, transparent 50%);
+            animation: meshMove 10s infinite alternate ease-in-out;
+        }
+        @keyframes meshMove {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        /* ==================== NEOMORPHIC 3D GLASS ==================== */
+        .neo-card {
+            background: rgba(248, 250, 252, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 
+                20px 20px 60px #e2e8f0,
+                -20px -20px 60px #ffffff;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .neo-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                25px 25px 50px #cbd5e1,
+                -25px -25px 50px #ffffff;
+        }
+
+        .neo-input { 
+            background: #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+            padding: 16px; 
+            border-radius: 16px; 
+            font-size: 14px; 
+            outline: none; 
+            width: 100%; 
+            color: #334155; 
+            box-shadow: inset 6px 6px 12px #cbd5e1, inset -6px -6px 12px #ffffff;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .neo-input:focus { 
+            box-shadow: inset 2px 2px 5px #cbd5e1, inset -2px -2px 5px #ffffff;
+            border-color: #fb7185;
+            background: #ffffff;
+        }
+
+        .nominal-item {
+            background: #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 16px; 
+            padding: 16px; 
+            cursor: pointer;
+            box-shadow: 4px 4px 10px #cbd5e1, -4px -4px 10px #ffffff;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .nominal-item:hover { 
+            transform: scale(1.02);
+            background: #ffffff;
+        }
+        
+        .nominal-item.active { 
+            border-color: transparent;
+            background: linear-gradient(135deg, #f43f5e 0%, #fb7185 100%);
+            color: #ffffff !important;
+            box-shadow: inset 4px 4px 10px rgba(0,0,0,0.15), 0px 10px 20px rgba(251, 113, 133, 0.3);
+        }
+
+        .btn-extreme {
+            background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
+            color: #ffffff;
+            font-weight: 700;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px -5px rgba(225, 29, 72, 0.3), inset 0 -4px 0 rgba(0,0,0,0.15);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .btn-extreme:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(225, 29, 72, 0.4), inset 0 -4px 0 rgba(0,0,0,0.15);
+        }
+
+        .menu-box {
+            background: #f1f5f9;
+            box-shadow: 4px 4px 8px #cbd5e1, -4px -4px 8px #ffffff;
+            transition: all 0.3s ease;
+        }
+        .menu-box.active {
+            background: #ffffff;
+            box-shadow: inset 3px 3px 6px #cbd5e1, inset -3px -3px 6px #ffffff;
+            transform: scale(0.96);
+            border: 2px solid #fda4af !important;
+        }
+
+        .sub-menu-box {
+            background: #f1f5f9;
+            box-shadow: 3px 3px 6px #cbd5e1, -3px -3px 6px #ffffff;
+            transition: all 0.2s ease;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: center;
+            padding: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .sub-menu-box.active {
+            background: #ffffff;
+            border-color: #fda4af;
+            box-shadow: inset 2px 2px 4px #cbd5e1, inset -2px -2px 4px #ffffff;
+        }
+
+        .animate-pop {
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="mesh-bg"></div>
+
+    <div class="max-w-[1200px] mx-auto relative z-10 animate-pop">
+        
+        <div class="flex flex-col items-center justify-center text-center mb-10 mt-4">
+            <span class="text-[11px] font-900 text-rose-500 uppercase tracking-widest bg-white px-4 py-1.5 rounded-full shadow-sm mb-3">System 24 jam</span>
+            <h1 class="text-5xl font-900 text-slate-900 tracking-tighter">AURORA<span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-amber-500">STORE</span></h1>
+            <p class="text-[12px] font-600 text-slate-400 uppercase tracking-wider mt-1">Layanan Pengisian Serba Lengkap</p>
+            
+            <button onclick="showTransactionHistory()" class="mt-4 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-slate-200 text-[10px] font-700 text-slate-600 hover:text-rose-500 transition-all shadow-sm flex items-center gap-2">
+                📜 Riwayat Transaksi
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            
+            <div class="md:col-span-1 space-y-6">
+                
+                <div class="neo-card p-5 flex items-center gap-4">
+                    <div id="productIcon" class="text-3xl bg-white p-3.5 rounded-xl shadow-md">🎮</div>
+                    <div>
+                        <h2 id="productTitle" class="font-700 text-base text-slate-900">Mobile Legends</h2>
+                        <span class="text-[10px] font-700 text-rose-500 uppercase tracking-wider">STOK READY</span>
+                    </div>
+                </div>
+
+                <div class="neo-card p-6">
+                    <label id="inputLabel" class="text-[11px] text-slate-400 font-700 uppercase tracking-wider block mb-3">id & server pengguna</label>
+                    <div class="grid grid-cols-3 gap-3" id="inputGrid">
+                        </div>
+                    <div class="flex items-center gap-2 mt-3 text-slate-500">
+                        <span class="text-xs font-500" id="helperText">Masukkan User ID dan server game kamu.</span>
+                    </div>
+                </div>
+
+                <div class="neo-card p-6">
+                    <h3 class="font-700 text-xs text-slate-900 uppercase tracking-wider mb-4">Payment</h3>
+                    <div class="bg-white border border-rose-200 rounded-2xl p-4 flex items-center justify-between cursor-pointer shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">💳</span>
+                            <span class="text-[12px] font-700 text-slate-900">QRIS</span>
+                        </div>
+                        <span class="h-3.5 w-3.5 rounded-full bg-gradient-to-br from-rose-500 to-rose-600 shadow-lg"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-2 neo-card p-6 md:p-8">
+                
+                <div class="mb-6">
+                    <h3 class="font-700 text-xs text-slate-900 uppercase tracking-wider mb-4">Modul Layanan</h3>
+                    <div class="grid grid-cols-3 sm:grid-cols-5 gap-3">
+                        <div class="menu-box active border-2 border-transparent rounded-xl p-3 flex flex-col items-center justify-center gap-1 cursor-pointer" onclick="switchCategory('game', this)">
+                            <span class="text-2xl">🎮</span>
+                            <span class="text-[10px] font-700 text-slate-800">GAME</span>
+                        </div>
+                        <div class="menu-box border-2 border-transparent rounded-xl p-3 flex flex-col items-center justify-center gap-1 cursor-pointer" onclick="switchCategory('pulsa', this)">
+                            <span class="text-2xl">📱</span>
+                            <span class="text-[10px] font-700 text-slate-800">PULSA & KOUTA</span>
+                        </div>
+                        <div class="menu-box border-2 border-transparent rounded-xl p-3 flex flex-col items-center justify-center gap-1 cursor-pointer" onclick="switchCategory('token', this)">
+                            <span class="text-2xl">⚡</span>
+                            <span class="text-[10px] font-700 text-slate-800">TOKEN PLN</span>
+                        </div>
+                        <div class="menu-box border-2 border-transparent rounded-xl p-3 flex flex-col items-center justify-center gap-1 cursor-pointer" onclick="switchCategory('wallet', this)">
+                            <span class="text-2xl">💰</span>
+                            <span class="text-[10px] font-700 text-slate-800">E Wallet</span>
+                        </div>
+                        <div class="menu-box border-2 border-transparent rounded-xl p-3 flex flex-col items-center justify-center gap-1 cursor-pointer" onclick="switchCategory('streaming', this)">
+                            <span class="text-2xl">🎬</span>
+                            <span class="text-[10px] font-700 text-slate-800">STREAM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6" id="subMenuContainer">
+                    <h3 class="font-700 text-xs text-slate-900 uppercase tracking-wider mb-3">Pilih Produk</h3>
+                    <div class="grid grid-cols-3 sm:grid-cols-4 gap-2" id="subMenuGrid">
+                        </div>
+                </div>
+
+                <div>
+                    <h3 class="font-700 text-xs text-slate-900 uppercase tracking-wider mb-3">Pilih Paket</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="nominalGrid">
+                        </div>
+                </div>
+
+                <div class="mt-8 pt-5 border-t border-slate-100">
+                    <div class="flex justify-between items-center mb-4 bg-slate-50 p-4 rounded-xl shadow-inner">
+                        <span class="text-slate-400 font-600 text-xs uppercase">Total Pembayaran:</span>
+                        <span id="totalPrice" class="text-2xl font-900 text-slate-900 tracking-tighter">Rp 0</span>
+                    </div>
+                    
+                    <button onclick="processPayment()" class="w-full btn-extreme py-4 rounded-xl text-[13px]">
+                        Bayar Sekarang
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-center text-[10px] text-slate-400 font-700 uppercase tracking-widest mt-12 mb-4">Aurora Store// Powered by Dicki</p>
+    </div>
+
+    <script>
+        let currentCategory = 'game';
+        let currentProduct = '';
+        let selectedSkuCode = ""; 
+        let selectedPrice = "0";
+        let selectedName = "";
+
+        const localImages = [
+            'lucu1.jpg',
+            'lucu2.jpg',
+            'lucu3.jpg',
+            'lucu4.jpg'
+        ];
+
+        // DATABASE PRODUK LENGKAP
+        const database = {
+            game: {
+                label: "id server pengguna", helper: "Masukkan User ID dan Zona ID game kamu.",
+                inputs: `<input type="text" id="userId" placeholder="ID Akun" class="neo-input col-span-2"><input type="text" id="zoneId" placeholder="server" class="neo-input col-span-1">`,
+                products: {
+                    mlbb: { 
+                        name: "ml.jpg|Mobile Legends", 
+                        items: [
+                            { n: "Weekly Diamond Pass", p: "27.500", sku: "ML-WDP" }, { n: "Starlight Member", p: "145.000", sku: "ML-SL" }, { n: "Starlight Plus", p: "290.000", sku: "ML-SLP" },
+                            { n: "5 Diamond", p: "1.300", sku: "ML-5" }, { n: "12 Diamond", p: "3.200", sku: "ML-12" }, { n: "28 Diamond", p: "7.200", sku: "ML-28" },
+                            { n: "86 Diamond", p: "19.000", sku: "ML-86" }, { n: "172 Diamond", p: "38.000", sku: "ML-172" }, { n: "257 Diamond", p: "56.000", sku: "ML-257" },
+                            { n: "344 Diamond", p: "75.000", sku: "ML-344" }, { n: "429 Diamond", p: "94.000", sku: "ML-429" }, { n: "706 Diamond", p: "150.000", sku: "ML-706" },
+                            { n: "1050 Diamond", p: "228.000", sku: "ML-1050" }, { n: "1412 Diamond", p: "300.000", sku: "ML-1412" }
+                        ] 
+                    },
+                    pubgm: { 
+                        name: "pubg.jpg|PUBG Mobile", 
+                        items: [
+                            { n: "60 UC", p: "13.500", sku: "PUBG-60" }, { n: "325 UC", p: "65.000", sku: "PUBG-325" }, { n: "660 UC", p: "128.000", sku: "PUBG-660" },
+                            { n: "1800 UC", p: "330.000", sku: "PUBG-1800" }, { n: "3850 UC", p: "650.000", sku: "PUBG-3850" }
+                        ] 
+                    },
+                    ff: { 
+                        name: "ff.jpg|Free Fire", 
+                        items: [
+                            { n: "Weekly Membership", p: "30.000", sku: "FF-WEEK" }, { n: "Monthly Membership", p: "110.000", sku: "FF-MONTH" },
+                            { n: "5 Diamond", p: "900", sku: "FF-5" }, { n: "12 Diamond", p: "1.800", sku: "FF-12" }, { n: "50 Diamond", p: "6.500", sku: "FF-50" },
+                            { n: "70 Diamond", p: "9.000", sku: "FF-70" }, { n: "140 Diamond", p: "18.500", sku: "FF-140" }, { n: "355 Diamond", p: "45.000", sku: "FF-355" },
+                            { n: "720 Diamond", p: "90.000", sku: "FF-720" }
+                        ] 
+                    },
+                    val: { 
+                        name: "valo.jpg|Valorant", 
+                        items: [
+                            { n: "475 Points", p: "47.000", sku: "VAL-475" }, { n: "1000 Points", p: "95.000", sku: "VAL-1000" }, { n: "1975 Points", p: "188.000", sku: "VAL-1975" },
+                            { n: "3400 Points", p: "315.000", sku: "VAL-3400" }
+                        ] 
+                    },
+                    genshin: { 
+                        name: "gi.jpg|Genshin Impact", 
+                        items: [
+                            { n: "Welkin Moon", p: "72.000", sku: "GI-WM" }, { n: "300 Genesis", p: "65.000", sku: "GI-300" }, { n: "980 Genesis", p: "205.000", sku: "GI-980" },
+                            { n: "1980 Genesis", p: "420.000", sku: "GI-1980" }
+                        ] 
+                    }
+                }
+            },
+            pulsa: {
+                label: "Nomor Handphone", helper: "Masukkan nomor handphone yang akan diisi pulsa.",
+                inputs: `<input type="number" id="userId" placeholder="08xxxxxxxxxx" class="neo-input col-span-3">`,
+                products: {
+                    telkomsel: { 
+                        name: "tsel.jpg|Telkomsel", 
+                        items: [
+                            { n: "Pulsa 5k", p: "6.000", sku: "TS-5" }, { n: "Pulsa 10k", p: "11.000", sku: "TS-10" }, { n: "Pulsa 20k", p: "20.500", sku: "TS-20" }, 
+                            { n: "Pulsa 25k", p: "25.300", sku: "TS-25" }, { n: "Pulsa 50k", p: "50.100", sku: "TS-50" }, { n: "Pulsa 100k", p: "98.500", sku: "TS-100" },
+                            { n: "Internet 1.5GB / 3 Hari", p: "14.000", sku: "TSD-1" }, { n: "Internet 3GB / 3 Hari", p: "23.000", sku: "TSD-3" },
+                            { n: "Internet 5GB / 7 Hari", p: "39.000", sku: "TSD-5" }, { n: "Internet 12GB / 30 Hari", p: "65.000", sku: "TSD-12" }
+                        ] 
+                    },
+                    indosat: { 
+                        name: "isat.jpg|Indosat Ooredoo", 
+                        items: [
+                            { n: "Pulsa 5k", p: "5.900", sku: "IS-5" }, { n: "Pulsa 10k", p: "10.900", sku: "IS-10" }, { n: "Pulsa 25k", p: "25.300", sku: "IS-25" }, 
+                            { n: "Pulsa 50k", p: "49.800", sku: "IS-50" }, { n: "Pulsa 100k", p: "98.000", sku: "IS-100" },
+                            { n: "Freedom 2GB / 15 Hari", p: "15.000", sku: "ISD-2" }, { n: "Freedom 5GB / 30 Hari", p: "30.000", sku: "ISD-5" },
+                            { n: "Freedom 12GB / 30 Hari", p: "55.000", sku: "ISD-12" }
+                        ] 
+                    },
+                    xl: { 
+                        name: "xl.jpg|XL Axiata", 
+                        items: [
+                            { n: "Pulsa 5k", p: "5.900", sku: "XL-5" }, { n: "Pulsa 10k", p: "11.000", sku: "XL-10" }, { n: "Pulsa 25k", p: "25.500", sku: "XL-25" }, 
+                            { n: "Pulsa 50k", p: "50.000", sku: "XL-50" }, { n: "Pulsa 100k", p: "98.500", sku: "XL-100" },
+                            { n: "Combo Mini 2GB / 7 Hari", p: "12.000", sku: "XLD-2" }, { n: "Combo Mini 4.5GB / 7 Hari", p: "20.000", sku: "XLD-4" },
+                            { n: "Flex S 3.5GB / 30 Hari", p: "30.000", sku: "XLD-S" }, { n: "Flex M 10GB / 30 Hari", p: "53.000", sku: "XLD-M" }
+                        ] 
+                    },
+                    tri: { 
+                        name: "tri.jpg|Tri (3)", 
+                        items: [
+                            { n: "Pulsa 5k", p: "5.600", sku: "TRI-5" }, { n: "Pulsa 10k", p: "10.600", sku: "TRI-10" }, { n: "Pulsa 20k", p: "20.000", sku: "TRI-20" }, 
+                            { n: "Pulsa 50k", p: "49.500", sku: "TRI-50" }, { n: "Pulsa 100k", p: "97.500", sku: "TRI-100" },
+                            { n: "Happy 2GB / 1 Hari", p: "5.500", sku: "TRID-2" }, { n: "Happy 3.5GB / 5 Hari", p: "14.000", sku: "TRID-3" },
+                            { n: "Happy 6GB / 7 Hari", p: "22.000", sku: "TRID-6" }, { n: "Happy 12GB / 30 Hari", p: "48.000", sku: "TRID-12" }
+                        ] 
+                    },
+                    smartfren: { 
+                        name: "smarfren.jpg|Smartfren", 
+                        items: [
+                            { n: "Pulsa 5k", p: "5.300", sku: "SF-5" }, { n: "Pulsa 10k", p: "10.300", sku: "SF-10" }, { n: "Pulsa 20k", p: "20.000", sku: "SF-20" }, 
+                            { n: "Pulsa 50k", p: "49.000", sku: "SF-50" }, { n: "Pulsa 100k", p: "97.000", sku: "SF-100" },
+                            { n: "Nonstop 2GB / 14 Hari", p: "15.000", sku: "SFD-2" }, { n: "Nonstop 6GB / 30 Hari", p: "31.000", sku: "SFD-6" },
+                            { n: "Nonstop 12GB / 30 Hari", p: "48.000", sku: "SFD-12" }
+                        ] 
+                    }
+                }
+            },
+            token: {
+                label: "Nomor Meteran", helper: "Masukkan No. Meter atau ID Pelanglam PLN Anda.",
+                inputs: `<input type="number" id="userId" placeholder="01xxxxxxxxxx" class="neo-input col-span-3">`,
+                products: {
+                    pln: { 
+                        name: "pln.jpg|PLN Prabayar", 
+                        items: [
+                            { n: "Token 20.000", p: "20.800", sku: "PLN-20" }, 
+                            { n: "Token 50.000", p: "50.800", sku: "PLN-50" }, 
+                            { n: "Token 100.000", p: "100.800", sku: "PLN-100" }, 
+                            { n: "Token 200.000", p: "200.800", sku: "PLN-200" }
+                        ] 
+                    }
+                }
+            },
+            wallet: {
+                label: "Nomor Akun", helper: "Masukkan nomor akun E-Wallet kamu.",
+                inputs: `<input type="number" id="userId" placeholder="08xxxxxxxxxx" class="neo-input col-span-3">`,
+                products: {
+                    dana: { name: "dana.jpg|DANA", items: [{ n: "Saldo 10k", p: "10.800", sku: "DA-10" }, { n: "Saldo 20k", p: "20.800", sku: "DA-20" }, { n: "Saldo 50k", p: "50.800", sku: "DA-50" }, { n: "Saldo 100k", p: "100.500", sku: "DA-100" }] },
+                    gopay: { name: "gopay.jpg|GoPay", items: [{ n: "Saldo 10k", p: "10.700", sku: "GP-10" }, { n: "Saldo 50k", p: "50.700", sku: "GP-50" }, { n: "Saldo 100k", p: "100.700", sku: "GP-100" }] },
+                    ovo: { name: "ovo.jpg|OVO", items: [{ n: "Saldo 20k", p: "20.800", sku: "OV-20" }, { n: "Saldo 50k", p: "50.800", sku: "OV-50" }] },
+                    shopeepay: { name: "pee.jpg|ShopeePay", items: [{ n: "Saldo 10k", p: "10.800", sku: "SP-10" }, { n: "Saldo 50k", p: "50.800", sku: "SP-50" }] }
+                }
+            },
+            streaming: {
+                label: "Alamat Email", helper: "Masukkan alamat email yang akan didaftarkan/proses.",
+                inputs: `<input type="email" id="userId" placeholder="nama@gmail.com" class="neo-input col-span-3">`,
+                products: {
+                    netflix: { name: "netflix.jpg|Netflix Premium", items: [{ n: "1 Bulan (Shared)", p: "32.000", sku: "NF-S" }, { n: "1 Bulan (Private)", p: "155.000", sku: "NF-P" }] },
+                    youtube: { name: "yt.jpg|YouTube Premium", items: [{ n: "1 Bulan (Indo)", p: "12.000", sku: "YT-1" }, { n: "3 Bulan (Indo)", p: "32.000", sku: "YT-3" }] },
+                    spotify: { name: "spot.jpg|Spotify Family", items: [{ n: "1 Bulan", p: "12.000", sku: "SP-1" }, { n: "2 Bulan", p: "25.000", sku: "SP-2" }] },
+                    disney: { name: "dis.jpg|Disney+ Hotstar", items: [{ n: "1 Bulan (Basic)", p: "62.000", sku: "DIS-1" }] }
+                }
+            }
+        };
+
+        function switchCategory(key, element) {
+            document.querySelectorAll('.menu-box').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            currentCategory = key;
+            const data = database[key];
+            
+            document.getElementById('inputLabel').innerText = data.label;
+            document.getElementById('helperText').innerText = data.helper;
+            document.getElementById('inputGrid').innerHTML = data.inputs;
+
+            renderSubMenu(data.products);
+        }
+
+        function renderSubMenu(products) {
+            const container = document.getElementById('subMenuGrid');
+            container.innerHTML = "";
+            
+            const productKeys = Object.keys(products);
+            
+            productKeys.forEach((key, index) => {
+                const prod = products[key];
+                const activeClass = index === 0 ? 'active' : '';
+                
+                const nameParts = prod.name.split('|');
+                const imageFile = nameParts[0];
+                const realGameName = nameParts[1] || prod.name;
+
+                if(index === 0) {
+                    currentProduct = key;
+                    updateHeaderInfo(realGameName, imageFile);
+                    renderNominal(prod.items);
+                }
+
+                container.insertAdjacentHTML('beforeend', `
+                    <div class="sub-menu-box ${activeClass} flex items-center justify-center gap-2 p-3 min-h-[50px]" onclick="selectProduct('${key}', this)">
+                        <img src="${imageFile}" alt="Logo" class="w-6 h-6 object-contain rounded-md" onerror="this.style.display='none'"> 
+                        <span class="font-bold text-[11px] text-slate-800 tracking-tight leading-tight text-left">${realGameName}</span>
+                    </div>
+                `);
+            });
+        }
+
+        function selectProduct(key, element) {
+            document.querySelectorAll('.sub-menu-box').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            
+            currentProduct = key;
+            const prod = database[currentCategory].products[key];
+            
+            const nameParts = prod.name.split('|');
+            const imageFile = nameParts[0];
+            const realGameName = nameParts[1] || prod.name;
+            
+            updateHeaderInfo(realGameName, imageFile);
+            renderNominal(prod.items);
+
+            if (navigator.vibrate) navigator.vibrate(20);
+        }
+
+        function updateHeaderInfo(name, icon) {
+            document.getElementById('productIcon').innerHTML = `<img src="${icon}" class="w-8 h-8 object-contain" onerror="this.src='https://placehold.co/32x32?text=?'">`;
+            document.getElementById('productTitle').innerText = name;
+        }
+
+        function renderNominal(items) {
+            const container = document.getElementById('nominalGrid');
+            container.innerHTML = "";
+            
+            items.forEach((item, index) => {
+                const activeClass = index === 0 ? 'active' : '';
+                if(index === 0) {
+                    selectedPrice = item.p;
+                    selectedName = item.n;
+                    selectedSkuCode = item.sku; 
+                    document.getElementById('totalPrice').innerText = `Rp ${item.p}`;
+                }
+
+                container.insertAdjacentHTML('beforeend', `
+                    <div class="nominal-item ${activeClass} flex flex-col justify-between" onclick="selectNominal(this, '${item.p}', '${item.n}', '${item.sku}')">
+                        <span class="font-700 text-[12px] text-inherit">${item.n}</span>
+                        <span class="text-[11px] font-600 opacity-60 mt-1">Rp ${item.p}</span>
+                    </div>
+                `);
+            });
+        }
+
+        function selectNominal(element, price, name, sku) {
+            document.querySelectorAll('.nominal-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            
+            selectedPrice = price;
+            selectedName = name;
+            selectedSkuCode = sku; 
+            document.getElementById('totalPrice').innerText = `Rp ${price}`;
+            
+            if (navigator.vibrate) navigator.vibrate(30);
+        }
+
+        function saveTransaction(target, produk, nominal, harga, sku) {
+            const history = JSON.parse(localStorage.getItem('aurora_history')) || [];
+            
+            const newTx = {
+                id: 'TX-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+                target: target,
+                produk: produk,
+                nominal: nominal,
+                harga: harga,
+                sku: sku,
+                waktu: new Date().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }),
+                status: 'Proses'
+            };
+            
+            history.unshift(newTx);
+            localStorage.setItem('aurora_history', JSON.stringify(history));
+        }
+
+        function showTransactionHistory() {
+            const history = JSON.parse(localStorage.getItem('aurora_history')) || [];
+            
+            if (navigator.vibrate) navigator.vibrate(30);
+
+            const modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-slate-900/30 backdrop-blur-xl flex items-center justify-center p-4 z-50 animate-pop";
+            
+            let listHtml = '';
+            if (history.length === 0) {
+                listHtml = `<div class="text-center py-6"><span class="text-3xl">📭</span><p class="text-xs font-600 text-slate-400 mt-2">Belum ada riwayat.</p></div>`;
+            } else {
+                listHtml = history.map(tx => `
+                    <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm text-left text-[11px] relative mb-2">
+                        <span class="absolute top-3 right-3 text-[9px] font-900 bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full">${tx.status}</span>
+                        <div class="font-700 text-slate-900 mb-0.5">${tx.produk} - ${tx.nominal}</div>
+                        <div class="text-slate-400 font-500">ID: ${tx.target} (${tx.id})</div>
+                        <div class="flex justify-between items-center mt-1.5 border-t border-slate-50 pt-1.5">
+                            <span class="text-slate-400">${tx.waktu} WIB</span>
+                            <span class="text-rose-500 font-700">Rp ${tx.harga}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            modal.innerHTML = `
+                <div class="neo-card w-full max-w-sm p-6 text-center bg-white/90">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-900 text-slate-900 uppercase tracking-tight">📜 Riwayat Transaksi</h3>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove();" class="text-slate-400 hover:text-slate-900 text-sm">✕</button>
+                    </div>
+                    <div class="max-h-[300px] overflow-y-auto pr-1">${listHtml}</div>
+                    <button onclick="this.parentElement.parentElement.remove();" class="mt-4 w-full btn-extreme py-3 rounded-xl text-xs font-700">Tutup</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // ==================== MODIFIKASI FUNGSI DISINI ====================
+        function processPayment() {
+            const u = document.getElementById('userId').value;
+            if(!u) {
+                alert("Masukkan data target atau nomor terlebih dahulu!");
+                return;
+            }
+            
+            const currentProdObj = database[currentCategory].products[currentProduct];
+            const nameParts = currentProdObj.name.split('|');
+            const realGameName = nameParts[1] || currentProdObj.name;
+            
+            saveTransaction(u, realGameName, selectedName, selectedPrice, selectedSkuCode);
+
+            if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+
+            const modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-slate-900/30 backdrop-blur-xl flex items-center justify-center p-4 z-50 animate-pop";
+            modal.id = "paymentModal";
+            
+            const basePrice = parseInt(selectedPrice.replace('.', ''));
+            const randomImageUrl = localImages[Math.floor(Math.random() * localImages.length)];
+
+            modal.innerHTML = `
+                <div class="neo-card w-full max-w-sm p-6 text-center relative bg-white/90">
+                    <span class="text-[10px] font-900 text-rose-500 uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full">Secure Gateway</span>                  
+                    <div class="flex justify-center mt-3 mb-1">
+                        <img src="${randomImageUrl}" alt="Gambar Lucu" class="w-[120px] h-[120px] object-cover rounded-xl shadow-sm" onerror="this.style.display='none'">
+                    </div>
+
+                    <h3 class="text-xl font-900 text-slate-900 mb-4 tracking-tight">Detail Pembayaran</h3>
+                    
+                    <div class="w-48 h-48 mx-auto bg-white border-2 border-white rounded-2xl p-2 flex items-center justify-center shadow-md relative">
+                        <img src="qris.png" alt="QRIS Pembayaran" class="w-full h-full object-contain rounded-xl" onerror="this.src='https://placehold.co/150x150?text=QRIS+Belum+Siap'">
+                    </div>
+                    
+                    <div class="mt-4 text-left text-[11px] bg-slate-50 p-4 rounded-xl space-y-1.5 border border-white">
+                        <div class="flex justify-between items-center"><span class="text-slate-400 font-500">PRODUK:</span><span class="text-slate-900 font-700">${realGameName} - ${selectedName}</span></div>
+                        <div class="flex justify-between items-center"><span class="text-slate-400 font-500">TUJUAN:</span><span class="text-slate-900 font-700">${u}</span></div>
+                        <div class="flex justify-between items-center"><span class="text-slate-400 font-500">KODE SKU:</span><span class="text-rose-500 font-700">${selectedSkuCode}</span></div>
+                        
+                        <div id="promoRow" class="hidden flex justify-between items-center text-emerald-600">
+                            <span class="font-500">POTONGAN PROMO:</span>
+                            <span class="font-700" id="promoCutText">-Rp 0</span>
+                        </div>
+
+                        <div class="border-t border-slate-200 pt-1.5 mt-1.5 flex justify-between items-center">
+                            <span class="text-slate-500 font-600">TOTAL:</span>
+                            <span class="text-rose-600 font-900 text-[14px]" id="modalTotalPrice">Rp ${selectedPrice}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 flex gap-2">
+                        <input type="text" id="promoInput" placeholder="Punya kode promo?" class="neo-input text-xs py-3 flex-1" style="box-shadow: inset 3px 3px 6px #cbd5e1, inset -3px -3px 6px #ffffff;">
+                        <button onclick="applyPromo(${basePrice})" class="bg-slate-900 text-white px-4 rounded-xl text-xs font-700 hover:bg-slate-800 transition-all">Klaim</button>
+                    </div>
+                    <p id="promoMessage" class="text-[10px] font-600 mt-1.5 text-left hidden"></p>
+
+                    <button onclick="this.parentElement.parentElement.remove();" class="mt-4 w-full btn-extreme py-3 rounded-xl text-xs font-700">
+                        Tutup / Selesai
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function applyPromo(basePrice) {
+            const promoInput = document.getElementById('promoInput').value.trim().toUpperCase();
+            const promoMessage = document.getElementById('promoMessage');
+            const promoRow = document.getElementById('promoRow');
+            const promoCutText = document.getElementById('promoCutText');
+            const modalTotalPrice = document.getElementById('modalTotalPrice');
+            
+            promoMessage.classList.remove('hidden', 'text-emerald-600', 'text-red-500');
+            
+            const listPromo = {
+                "DICKIUNTUNG": { tipe: "nominal", value: 5000, limitSatuKali: true },
+                "AURORANEW": { tipe: "persen", value: 10, limitSatuKali: false },
+                "SADIS": { tipe: "persen", value: 50, limitSatuKali: false }
+            };
+
+            if (promoInput === "") {
+                promoMessage.innerText = "Masukkan kodenya dulu, Bos!";
+                promoMessage.classList.add('text-red-500');
+                return;
+            }
+
+            if (listPromo[promoInput]) {
+                const promo = listPromo[promoInput];
+
+                if (promo.limitSatuKali) {
+                    const sudahPernahPakai = localStorage.getItem('used_promo_' + promoInput);
+                    if (sudahPernahPakai) {
+                        promoRow.classList.add('hidden');
+                        modalTotalPrice.innerText = `Rp ${basePrice.toLocaleString('id-ID')}`;
+                        promoMessage.innerText = "Diskon ini khusus pengguna baru & hanya bisa dipakai 1x!";
+                        promoMessage.classList.add('text-red-500');
+                        if (navigator.vibrate) navigator.vibrate(200);
+                        return;
+                    }
+                }
+
+                let potongan = 0;
+                if (promo.tipe === "persen") {
+                    potongan = Math.floor(basePrice * (promo.value / 100));
+                } else if (promo.tipe === "nominal") {
+                    potongan = promo.value;
+                }
+
+                let finalPrice = basePrice - potongan;
+                if (finalPrice < 0) finalPrice = 0;
+
+                if (promo.limitSatuKali) {
+                    localStorage.setItem('used_promo_' + promoInput, 'true');
+                }
+
+                promoRow.classList.remove('hidden');
+                promoCutText.innerText = `-Rp ${potongan.toLocaleString('id-ID')}`;
+                modalTotalPrice.innerText = `Rp ${finalPrice.toLocaleString('id-ID')}`;
+                
+                promoMessage.innerText = `Kode "${promoInput}" berhasil digunakan!`;
+                promoMessage.classList.add('text-emerald-600');
+                if (navigator.vibrate) navigator.vibrate([20, 100]);
+            } else {
+                promoRow.classList.add('hidden');
+                modalTotalPrice.innerText = `Rp ${basePrice.toLocaleString('id-ID')}`;
+                promoMessage.innerText = "Kode salah atau sudah kedaluwarsa!";
+                promoMessage.classList.add('text-red-500');
+                if (navigator.vibrate) navigator.vibrate(200);
+            }
+        }
+
+        switchCategory('game', document.querySelector('.menu-box'));
+    </script>
+</body>
+</html>
