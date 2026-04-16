@@ -149,10 +149,34 @@
             0% { opacity: 0; transform: scale(0.95); }
             100% { opacity: 1; transform: scale(1); }
         }
+        /* ==================== TAMBAHAN KONTAK PERSON ==================== */
+        .float-wa {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #25d366;
+            color: white;
+            padding: 16px 18px;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+        .float-wa:hover { transform: scale(1.1); }
+        .footer-info {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px;
+            margin-top: 48px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
-
+    <a href="https://wa.me/6289623373483?text=Halo%20Admin%20Aurora%20Store" class="float-wa" target="_blank">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.003 3.238l-.58 2.16 2.255-.594a5.83 5.83 0 0 0 3.09.876h.001c3.181 0 5.767-2.586 5.768-5.766.001-3.18-2.58-5.766-5.769-5.766zM17.5 17.5c-.322.871-1.35 1.586-2.14 1.765-.606.136-1.344.156-2.03.045-.597-.101-1.189-.285-1.74-.523l-.12-.056-.479.126-1.57.414.417-1.554.056-.208-.07-.184c-1.366-3.57.199-5.832.199-5.832 1.134-1.54 2.898-1.558 2.898-1.558l.128.006c.264.013.513.09.73.235l.07.049c.28.196.48.455.6.76.326.85.305 1.874-.067 2.768l-.056.126.028.14c.14.717.18 1.458.12 2.19z"/></svg>
+    </a>
     <div class="mesh-bg"></div>
 
     <div class="max-w-[1200px] mx-auto relative z-10 animate-pop">
@@ -253,7 +277,15 @@
             </div>
         </div>
 
+<div class="footer-info">
+        <h4 class="font-900 text-slate-900 mb-4 uppercase tracking-widest text-[10px]">Pusat Layanan Pelanggan</h4>
+        <div class="flex flex-col md:flex-row justify-center gap-4 text-[11px] font-600 text-slate-500">
+            <p>📍 Jakarta, Indonesia</p>
+            <p>✉️ dickikrisna234@gmail.com</p>
+            <p>📞 0896-2337-3483</p>
+        </div>
         <p class="text-center text-[10px] text-slate-400 font-700 uppercase tracking-widest mt-12 mb-4">Aurora Store// Powered by Dicki</p>
+    </div>
     </div>
 
     <script>
