@@ -226,16 +226,16 @@
 
             <div class="md:col-span-2 neo-card p-6 md:p-8">
                 
-                <div class="mb-6">
+                                <div class="mb-6">
                     <h3 class="font-700 text-xs text-slate-900 uppercase tracking-wider mb-4">Modul Layanan</h3>
-                    <div class="grid grid-cols-3 sm:grid-cols-5 gap-3">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         <div class="menu-box active border-2 border-transparent rounded-xl p-3 flex flex-col items-center justify-center gap-1 cursor-pointer" onclick="switchCategory('game', this)">
                             <span class="text-2xl">🎮</span>
                             <span class="text-[10px] font-700 text-slate-800">GAME</span>
                         </div>
                         <div class="menu-box border-2 border-transparent rounded-xl p-3 flex flex-col items-center justify-center gap-1 cursor-pointer" onclick="switchCategory('pulsa', this)">
                             <span class="text-2xl">📱</span>
-                            <span class="text-[10px] font-700 text-slate-800">PULSA & KOUTA</span>
+                            <span class="text-[10px] font-700 text-slate-800">PULSA & KUOTA</span>
                         </div>
                         <div class="menu-box border-2 border-transparent rounded-xl p-3 flex flex-col items-center justify-center gap-1 cursor-pointer" onclick="switchCategory('token', this)">
                             <span class="text-2xl">⚡</span>
@@ -243,11 +243,7 @@
                         </div>
                         <div class="menu-box border-2 border-transparent rounded-xl p-3 flex flex-col items-center justify-center gap-1 cursor-pointer" onclick="switchCategory('wallet', this)">
                             <span class="text-2xl">💰</span>
-                            <span class="text-[10px] font-700 text-slate-800">E Wallet</span>
-                        </div>
-                        <div class="menu-box border-2 border-transparent rounded-xl p-3 flex flex-col items-center justify-center gap-1 cursor-pointer" onclick="switchCategory('streaming', this)">
-                            <span class="text-2xl">🎬</span>
-                            <span class="text-[10px] font-700 text-slate-800">STREAM</span>
+                            <span class="text-[10px] font-700 text-slate-800">E-WALLET</span>
                         </div>
                     </div>
                 </div>
@@ -424,16 +420,7 @@
                     gopay: { name: "gopay.jpg|GoPay", items: [{ n: "Saldo 10k", p: "10.700", sku: "GP-10" }, { n: "Saldo 50k", p: "50.700", sku: "GP-50" }, { n: "Saldo 100k", p: "100.700", sku: "GP-100" }] },
                     ovo: { name: "ovo.jpg|OVO", items: [{ n: "Saldo 20k", p: "20.800", sku: "OV-20" }, { n: "Saldo 50k", p: "50.800", sku: "OV-50" }] },
                     shopeepay: { name: "pee.jpg|ShopeePay", items: [{ n: "Saldo 10k", p: "10.800", sku: "SP-10" }, { n: "Saldo 50k", p: "50.800", sku: "SP-50" }] }
-                }
-            },
-            streaming: {
-                label: "Alamat Email", helper: "Masukkan alamat email yang akan didaftarkan/proses.",
-                inputs: `<input type="email" id="userId" placeholder="nama@gmail.com" class="neo-input col-span-3">`,
-                products: {
-                    netflix: { name: "netflix.jpg|Netflix Premium", items: [{ n: "1 Bulan (Shared)", p: "32.000", sku: "NF-S" }, { n: "1 Bulan (Private)", p: "155.000", sku: "NF-P" }] },
-                    youtube: { name: "yt.jpg|YouTube Premium", items: [{ n: "1 Bulan (Indo)", p: "12.000", sku: "YT-1" }, { n: "3 Bulan (Indo)", p: "32.000", sku: "YT-3" }] },
-                    spotify: { name: "spot.jpg|Spotify Family", items: [{ n: "1 Bulan", p: "12.000", sku: "SP-1" }, { n: "2 Bulan", p: "25.000", sku: "SP-2" }] },
-                    disney: { name: "dis.jpg|Disney+ Hotstar", items: [{ n: "1 Bulan (Basic)", p: "62.000", sku: "DIS-1" }] }
+            
                 }
             }
         };
